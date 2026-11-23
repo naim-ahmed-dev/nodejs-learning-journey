@@ -1,18 +1,36 @@
-
 const http = require("node:http");
 
-// Create HTTP server
 const server = http.createServer((req, res) => {
 
-    res.writeHead(200, {
-        "Content-Type": "text/plain"
-    });
+    const url = req.url;
+    const method = req.method;
 
-    res.end("Hello! Welcome to my Node.js server.");
+    res.setHeader("Content-Type", "text/plain");
+
+    if (url === "/" && method === "GET") {
+
+        res.statusCode = 200;
+        res.end("Welcome to Home Page");
+
+    } else if (url === "/about" && method === "GET") {
+
+        res.statusCode = 200;
+        res.end("This is About Page");
+
+    } else if (url === "/contact" && method === "GET") {
+
+        res.statusCode = 200;
+        res.end("Contact us here");
+
+    } else {
+
+        res.statusCode = 404;
+        res.end("404 - Page Not Found");
+
+    }
 
 });
 
-// Start server
 server.listen(3000, () => {
-    console.log("Server running at http://localhost:3000");
+    console.log("Server running on port 3000");
 });
