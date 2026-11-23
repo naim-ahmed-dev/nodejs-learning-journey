@@ -18,9 +18,10 @@ hands-on exercises, and mini projects.
 ## Mini Projects
 
 Projects will be added as I progress through the learning journey.
+url Technocontact
 
-## Technologies
-
+- html
+- css
 - JavaScript
 - Node.js
 - Express.js
@@ -31,4 +32,4 @@ Projects will be added as I progress through the learning journey.
 To strengthen my backend development skills through consistent
 practice and real-world coding exercises.
 
-**Developer:** Naim Ahmed
+**Developer:** Naim serve Khanr
