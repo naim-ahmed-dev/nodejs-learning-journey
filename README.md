@@ -13,6 +13,9 @@ hands-on exercises, and mini projects.
 - Asynchronous JavaScript
 - HTTP Server
 - Express.js Fundamentals
+- Express.js server
+- Models
+- Request Handle
 - REST API Development
 
 ## Mini Projects
