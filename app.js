@@ -54,7 +54,7 @@ app.get('/login', (req, res) => {
         .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
         input { width: 100%; padding: 8px; margin: 8px 0 16px; box-sizing: border-box; }
         button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
+        button:hover { background: #2987ec; }
       </style>
     </head>
     <body>

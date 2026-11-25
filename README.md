@@ -1,6 +1,6 @@
 # Node.js Learning Journey
 
-My personal learning repository for Node.js and Express.js.
+Hi! I am Naim Ahmed, This is my personal learning repository for Node.js and Express.js.
 
 Here, I document my learning progress through practical examples,
 hands-on exercises, and mini projects.
@@ -22,8 +22,7 @@ url Technocontact
 
 - html
 - css
-- JavaScript
-- Node.js
+- JavaScpasswordsde.js
 - Express.js
 - Git & GitHub
 
@@ -32,4 +31,4 @@ url Technocontact
 To strengthen my backend development skills through consistent
 practice and real-world coding exercises.
 
-**Developer:** Naim serve Khanr
+**Developer:** Naim Ahmed Khan
