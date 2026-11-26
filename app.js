@@ -1,14 +1,24 @@
 import express from 'express';
 import session from 'express-session';
+import bcrypt from 'bcryptjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Middleware to parse HTML form submissions and JSON
+// Set EJS as the templating engine
+app.set('view engine', 'ejs');
+
+// Serve static files (CSS, images) from 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Parse form data
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
-// Configure session storage
+// Configure session
 app.use(
   session({
     secret: 'super-secret-key-change-in-production',
@@ -17,11 +27,8 @@ app.use(
   })
 );
 
-// Demo user credentials (in real apps, use a database and hashed passwords)
-const DEMO_USER = {
-  username: 'admin',
-  password: 'password123',
-};
+// In-memory user store (resets when server restarts)
+const users = [];
 
 // Middleware to protect private routes
 function requireLogin(req, res, next) {
@@ -31,75 +38,67 @@ function requireLogin(req, res, next) {
   res.redirect('/login');
 }
 
-// 1. Home Route
+// Home route
 app.get('/', (req, res) => {
-  if (req.session.user) {
-    return res.redirect('/dashboard');
-  }
-  res.redirect('/login');
+  res.redirect(req.session.user ? '/dashboard' : '/login');
 });
 
-// 2. Render Login Page (GET)
+// Render Login Page
 app.get('/login', (req, res) => {
-  const error = req.query.error ? '<p style="color: red;">Invalid username or password!</p>' : '';
-  
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>Login</title>
-      <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; margin-top: 100px; background: #f4f4f9; }
-        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
-        input { width: 100%; padding: 8px; margin: 8px 0 16px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #2987ec; }
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <h2>Login</h2>
-        ${error}
-        <form action="/login" method="POST">
-          <label>Username</label>
-          <input type="text" name="username" required placeholder="admin" />
-          
-          <label>Password</label>
-          <input type="password" name="password" required placeholder="password123" />
-          
-          <button type="submit">Sign In</button>
-        </form>
-      </div>
-    </body>
-    </html>
-  `);
+  res.render('login', {
+    error: req.query.error || null,
+    success: req.query.success || null,
+  });
 });
 
-// 3. Handle Login Submission (POST)
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
+// Handle Login
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = users.find((u) => u.email === email);
 
-  if (username === DEMO_USER.username && password === DEMO_USER.password) {
-    req.session.user = username;
-    return res.redirect('/dashboard');
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.redirect('/login?error=Invalid+email+or+password');
   }
 
-  res.redirect('/login?error=1');
+  req.session.user = {
+    name: user.name,
+    email: user.email,
+    joinedAt: user.joinedAt,
+  };
+  res.redirect('/dashboard');
 });
 
-// 4. Protected Dashboard Page
+// Render Register Page
+app.get('/register', (req, res) => {
+  res.render('register', { error: req.query.error || null });
+});
+
+// Handle Registration
+app.post('/register', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (users.some((u) => u.email === email)) {
+    return res.redirect('/register?error=Email+already+registered');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  users.push({
+    name,
+    email,
+    password: hashedPassword,
+    joinedAt: new Date().toLocaleDateString(),
+  });
+
+  res.redirect('/login?success=Account+created!+Please+log+in.');
+});
+
+// Protected Dashboard
 app.get('/dashboard', requireLogin, (req, res) => {
-  res.send(`
-    <div style="font-family: Arial, sans-serif; padding: 40px;">
-      <h1>Welcome, ${req.session.user}!</h1>
-      <p>You are viewing a protected dashboard.</p>
-      <a href="/logout">Logout</a>
-    </div>
-  `);
+  res.render('dashboard', { user: req.session.user });
 });
 
-// 5. Logout Route
+// Logout
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login');
