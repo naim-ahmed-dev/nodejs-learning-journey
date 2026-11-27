@@ -3,7 +3,7 @@
 Hi! I am Naim Ahmed, This is my personal learning repository for Node.js and Express.js.
 
 Here, I document my learning progress through practical examples,
-hands-on exercises, and mini projects.
+hands-on exercises, and mini projects. Also I upload my complated project after complate it.
 
 ## Learning Topics
 
@@ -30,5 +30,7 @@ url Technocontact
 
 To strengthen my backend development skills through consistent
 practice and real-world coding exercises.
+
+### Thanks for coming
 
 **Developer:** Naim Ahmed Khan
