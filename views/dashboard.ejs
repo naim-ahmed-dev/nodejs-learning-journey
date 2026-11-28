@@ -10,11 +10,11 @@
   <div class="card">
     <h2>Dashboard</h2>
     <div class="dashboard-info">
-      <p><strong>Name:</strong> <%= user.name %></p>
-      <p><strong>Email:</strong> <%= user.email %></p>
-      <p><strong>Joined:</strong> <%= user.joinedAt %></p>
+      <p><strong>Name:</strong> <%= user.name || 'Name'%></p>
+      <p><strong>Email:</strong> <%= user.email || 'example@gmail.com'%></p>
+      <p><strong>Joined:</strong> <%= user.joinedAt || 'Please wait...'%></p>
     </div>
-    <a href="/logout" class="btn-logout">Logout</a>
+    <a href="/logout" class="btn-logout">Logout from this account</a>
   </div>
 </body>
 </html>
